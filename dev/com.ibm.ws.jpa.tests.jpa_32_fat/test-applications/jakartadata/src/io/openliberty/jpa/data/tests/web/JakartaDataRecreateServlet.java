@@ -53,7 +53,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
-    @Ignore("Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28912")
+//    @Ignore("Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28912")
     public void testOLGH28912() throws Exception {
         Coordinate original = Coordinate.of("testOLGH28912", 10, 15f);
         UUID id = original.id;
