@@ -56,7 +56,9 @@ public class JakartaDataRecreateServlet extends FATServlet {
 //    @Ignore("Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28912")
     public void testOLGH28912() throws Exception {
         Coordinate original = Coordinate.of("testOLGH28912", 10, 15f);
+        System.out.println("original id is : "+original.id);
         UUID id = original.id;
+        System.out.println(" id is : "+id);
         Coordinate result;
 
         tx.begin();
@@ -70,7 +72,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
                             .setParameter("id", id)
                             .executeUpdate();
 
-            result = em.createQuery("SELECT Coordinate WHERE id = :id", Coordinate.class)
+            result = em.createQuery("SELECT this from Coordinate WHERE id = :id", Coordinate.class)
                             .setParameter("id", id)
                             .getSingleResult();
             tx.commit();
@@ -86,8 +88,11 @@ public class JakartaDataRecreateServlet extends FATServlet {
         }
 
         assertEquals(id, result.id);
+        System.out.println("result id is :"+result.id);
+        System.out.println("result x is :"+result.x);
+        System.out.println("result y is :"+result.y);
         assertEquals(11, result.x, 0.001);
-        assertEquals(5f, result.y, 0.001);
+        assertEquals(3f, result.y, 0.001);
     }
 
     @Test

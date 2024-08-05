@@ -21,7 +21,7 @@ public class AsciiCharacter implements Serializable {
     @jakarta.persistence.Id
     private long id;
 
-    private int numericValue;
+    private Integer numericValue;
 
     private String hexadecimal;
 
@@ -48,11 +48,11 @@ public class AsciiCharacter implements Serializable {
         this.id = id;
     }
 
-    public int getNumericValue() {
+    public Integer getNumericValue() {
         return numericValue;
     }
 
-    public void setNumericValue(int numericValue) {
+    public void setNumericValue(Integer numericValue) {
         this.numericValue = numericValue;
     }
 

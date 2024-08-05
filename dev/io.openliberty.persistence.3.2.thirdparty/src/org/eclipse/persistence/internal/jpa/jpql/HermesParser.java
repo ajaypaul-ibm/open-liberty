@@ -162,6 +162,9 @@ public final class HermesParser implements JPAQueryBuilder {
             sb.append(problem.getEndPosition());
             sb.append("] ");
             sb.append(message);
+            String rootExpressionText = problem.getExpression().getRoot().toActualText();
+            sb.append(" (" + rootExpressionText.substring(0, problem.getStartPosition())
+                    + " [ " + problem.getExpression().toActualText() + " ] ...");
         }
 
         String errorMessage = bundle.getString(messageKey);
