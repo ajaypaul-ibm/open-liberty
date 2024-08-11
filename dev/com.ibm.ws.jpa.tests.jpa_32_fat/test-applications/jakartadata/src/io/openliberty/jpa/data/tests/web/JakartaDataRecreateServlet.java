@@ -93,19 +93,18 @@ public class JakartaDataRecreateServlet extends FATServlet {
         System.out.println("after copying id is "+id);
         tx.begin();
 
-        try {
+      
             em.persist(original);
-
+            tx.commit();
+            tx.begin();
+            try {
             em.createQuery("UPDATE Coordinate SET x = :newX, y = y / :yDivisor WHERE id = :id") //FAILURE PARSING QUERY HERE
                             .setParameter("newX", 11)
                             .setParameter("yDivisor", 5)
                             .setParameter("id", id)
                             .executeUpdate();
-
-            result = em.createQuery("SELECT this from Coordinate WHERE id = :id", Coordinate.class)
-                            .setParameter("id", id)
-                            .getSingleResult();
             tx.commit();
+
         } catch (Exception e) {
             tx.rollback();
 
@@ -116,13 +115,18 @@ public class JakartaDataRecreateServlet extends FATServlet {
              */
             throw e;
         }
+        tx.begin();
+        result = em.createQuery("SELECT this from Coordinate WHERE id = :id", Coordinate.class)
+        .setParameter("id", id)
+        .getSingleResult();
+        tx.commit();
         System.out.println("result.id is "+result.id);
         System.out.println("result.x is  "+result.x);
         System.out.println("result.y is  "+result.y);
 
         assertEquals(id, result.id);
         assertEquals(11, result.x, 0.001);
-        assertEquals(5f, result.y, 0.001);
+        assertEquals(3f, result.y, 0.001);
     }
 
     @Test
@@ -634,7 +638,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
-    @SkipIfSysProp(DB_Postgres) //Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28368
+    // @SkipIfSysProp(DB_Postgres) //Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28368
     public void testOLGH28368() throws Exception {
         PurchaseOrder order1 = PurchaseOrder.of("testOLGH28368-1", 12.55f);
         PurchaseOrder order2 = PurchaseOrder.of("testOLGH28368-2", 12.55f);
@@ -652,7 +656,11 @@ public class JakartaDataRecreateServlet extends FATServlet {
                             .setParameter(1, order1.id)
                             .getResultList();
 
+                            System.out.println("results.size() "+results.size());
             assertEquals(1, results.size());
+            System.out.println("order1.purchaseBy is : "+order1.purchasedBy);
+            System.out.println(" results.get(0).purchasedBy : "+ results.get(0).purchasedBy);
+
             assertEquals(order1.purchasedBy, results.get(0).purchasedBy);
 
             em.remove(results.get(0));
@@ -714,11 +722,11 @@ public class JakartaDataRecreateServlet extends FATServlet {
              */
             throw e;
         }
-
+        System.out.println(" assertEquals(1, results.size()); "+results.size());
         assertEquals(1, results.size());
+        System.out.println(" assertEquals(2007, results.get(0).collectedOn.atZone(EASTERN).get(ChronoField.YEAR)"+results.get(0).collectedOn.atZone(EASTERN).get(ChronoField.YEAR));
         assertEquals(2007, results.get(0).collectedOn.atZone(EASTERN).get(ChronoField.YEAR));
-
-        System.out.println(results.get(0).toString());
+        System.out.println("Resulsts :: "+results.get(0).toString());
     }
 
     @Test
@@ -917,7 +925,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
-    @SkipIfSysProp({ DB_Postgres, DB_SQLServer }) //Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28737
+    // @SkipIfSysProp({ DB_Postgres, DB_SQLServer }) //Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28737
     public void testOLGH28737() throws Exception {
         deleteAllEntities(Box.class);
 
@@ -955,10 +963,10 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
-    @SkipIfSysProp({
-                     DB_DB2, //Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28289
-                     DB_Oracle //Also fails: https://github.com/OpenLiberty/open-liberty/issues/28545
-    })
+    // @SkipIfSysProp({
+    //                  DB_DB2, //Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28289
+    //                  DB_Oracle //Also fails: https://github.com/OpenLiberty/open-liberty/issues/28545
+    // })
     public void testOLGH28289() throws Exception {
         deleteAllEntities(Package.class);
 
@@ -987,6 +995,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
         }
 
         System.out.println(tallToShort);
+        System.out.println( "tallToShort.size() should be 2 " +tallToShort.size());
 
         assertEquals(2, tallToShort.size());
 
@@ -1039,8 +1048,9 @@ public class JakartaDataRecreateServlet extends FATServlet {
             tx.rollback();
             throw e;
         }
-
+        System.out.println("results size should be 1"+results.size());
         assertEquals(1, results.size());
+        System.out.println("shoulde be 1000 "+results.get(0).balance);
         assertEquals(1000.00, results.get(0).balance, 0.01);
 
     }
@@ -1135,7 +1145,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
-    @Ignore("Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28898")
+    // @Ignore("Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28898")
     public void testOLGH28898() throws Exception {
         Reciept r1 = Reciept.of(00012, "Billy", 12.5f);
         Reciept r2 = Reciept.of(00013, "Bobby", 9.75f);
@@ -1152,6 +1162,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
             count = em.createQuery("DELETE FROM Reciept WHERE this.total < :max")
                             .setParameter("max", 10.00f)
                             .executeUpdate();
+                            System.out.println("count is "+count);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
@@ -1174,7 +1185,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
-    @Ignore("Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28895")
+    // @Ignore("Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28895")
     public void testOLGH28895() throws Exception {
         Product p1 = Product.of("testOLGH28895-1", "Ball", 12.50f);
         Product p2 = Product.of("testOLGH28895-2", "Skate", 15.50f);
@@ -1191,6 +1202,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
             count = em.createQuery("DELETE FROM Product WHERE this.name LIKE ?1")
                             .setParameter(1, "B%")
                             .executeUpdate();
+                            System.out.println("count is "+count);
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
