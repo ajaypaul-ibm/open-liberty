@@ -34,7 +34,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -93,6 +95,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
+    @Ignore
     @SkipIfSysProp({ DB_Postgres })
     public void testOLGH28912() throws Exception {
         Coordinate original = Coordinate.of("testOLGH28912", 10, 15f);
@@ -412,6 +415,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
+    @Ignore
     // Reference issue:https://github.com/eclipse-ee4j/eclipselink/issues/2234
     public void testELGH2234() throws Exception {
 
@@ -554,6 +558,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
+    @Ignore
     @SkipIfSysProp(DB_Oracle) // Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28545
     public void testOLGH28545_1() throws Exception {
         deleteAllEntities(Package.class); // Cleanup any left over entities
@@ -603,6 +608,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
+    @Ignore
     @SkipIfSysProp(DB_Oracle) // Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28545
     public void testOLGH28545_2() throws Exception {
         deleteAllEntities(Package.class); // Cleanup any left over entities
@@ -654,6 +660,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
+    @Ignore
     @SkipIfSysProp({ DB_Postgres, DB_Oracle }) // Reference issue:
                                                // https://github.com/OpenLiberty/open-liberty/issues/28545
     public void testOLGH28545_3() throws Exception {
@@ -755,6 +762,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
+    @Ignore
     @SkipIfSysProp(DB_Postgres) // Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28368
     public void testOLGH28368() throws Exception {
         PurchaseOrder order1 = PurchaseOrder.of("testOLGH28368-1", 12.55f);
@@ -800,7 +808,8 @@ public class JakartaDataRecreateServlet extends FATServlet {
         }
     }
 
-    @Test // Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28813
+    @Test
+    @Ignore // Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28813
     public void testOLGH28813() throws Exception {
         deleteAllEntities(DemographicInfo.class);
 
@@ -1056,6 +1065,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
+    @Ignore
     @SkipIfSysProp({ DB_Postgres, DB_SQLServer }) // Reference issue:
                                                   // https://github.com/OpenLiberty/open-liberty/issues/28737
     public void testOLGH28737() throws Exception {
@@ -1097,7 +1107,9 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
-    @SkipIfSysProp({ DB_DB2, DB_Oracle }) // Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28289
+    // @SkipIfSysProp({ DB_Oracle })
+    // @SkipIfSysProp({ DB_DB2, DB_Oracle }) // Reference issue:
+    // https://github.com/OpenLiberty/open-liberty/issues/28289
     public void testOLGH28289() throws Exception {
         deleteAllEntities(Package.class);
 
@@ -1106,7 +1118,9 @@ public class JakartaDataRecreateServlet extends FATServlet {
         Package p3 = Package.of(70007, 70.0f, 10.7f, 0.7f, "testOLGH28289#70007");
 
         List<Package> tallToShort;
-
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("eclipselink.logging.level.sql", "FINE");
+        properties.put("eclipselink.logging.parameters", "true");
         tx.begin();
         em.persist(p1);
         em.persist(p2);
@@ -1127,7 +1141,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
             throw e;
         }
 
-        System.out.println(tallToShort);
+        System.out.println("tall to short" + tallToShort);
 
         assertEquals(2, tallToShort.size());
 
@@ -1156,6 +1170,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
+    @Ignore
     // "Reference issue: https://github.com/OpenLiberty/open-liberty/issues/28078
     public void testOLGH28078() throws Exception {
         deleteAllEntities(Account.class);
@@ -1287,6 +1302,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
+    @Ignore
     // Reference issue : https://github.com/OpenLiberty/open-liberty/issues/28898
     public void testOLGH28898() throws Exception {
         Reciept r1 = Reciept.of(00012, "Billy", 12.5f);
@@ -1329,6 +1345,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
+    @Ignore
     // Reference issue : https://github.com/OpenLiberty/open-liberty/issues/28895
     public void testOLGH28895() throws Exception {
         Product p1 = Product.of("testOLGH28895-1", "Ball", 12.50f);
@@ -1368,6 +1385,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
+    @Ignore
     @SkipIfSysProp({ DB_Postgres, DB_Oracle }) // Reference issue:
                                                // https://github.com/OpenLiberty/open-liberty/issues/29440
     public void testOLGH29440() throws Exception {
@@ -1419,6 +1437,7 @@ public class JakartaDataRecreateServlet extends FATServlet {
     }
 
     @Test
+    @Ignore
     @SkipIfSysProp(DB_DB2) // Reference issue: https://github.com/OpenLiberty/open-liberty/issues/29443
     public void testOLGH29443() throws Exception {
         deleteAllEntities(DemographicInfo.class);

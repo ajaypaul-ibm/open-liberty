@@ -27,7 +27,7 @@
     <library id="AnonymousJDBCLib">
         <fileset dir="${shared.resource.dir}/jdbc" includes="${env.DB_DRIVER}"/>
     </library>
-
+    <logging traceSpecification="eclipselink.sql=all" />
     <!-- JDBC driver -->
     <javaPermission codebase="${shared.resource.dir}/jdbc/${env.DB_DRIVER}" className="java.security.AllPermission"/>
 
