@@ -23,6 +23,9 @@
 			<!-- EclipseLink should create the database schema automatically -->
 			<property name="jakarta.persistence.schema-generation.database.action" value="create" />
 			<property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.level.sql" value="ALL"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
 		</properties>
     </persistence-unit>
 </persistence>
